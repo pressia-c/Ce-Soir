@@ -1,0 +1,326 @@
+import React, { useState } from 'react';
+import { Phone, ArrowRight, MapPin, Heart } from 'lucide-react';
+
+function UserAuthFlow() {
+  const [step, setStep] = useState('welcome'); // welcome, phone, verify, profile, location
+  const [phoneNumber, setPhoneNumber] = useState('');
+  const [verificationCode, setVerificationCode] = useState(['', '', '', '', '', '']);
+  const [age, setAge] = useState('');
+  const [gender, setGender] = useState('');
+
+  // Handle verification code input
+  const handleCodeInput = (index, value) => {
+    if (value.length > 1) return;
+    const newCode = [...verificationCode];
+    newCode[index] = value;
+    setVerificationCode(newCode);
+    
+    if (value && index < 5) {
+      document.getElementById(`code-${index + 1}`)?.focus();
+    }
+  };
+
+  // WELCOME SCREEN
+  if (step === 'welcome') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-stone-50 to-amber-50/20">
+        <div className="max-w-md mx-auto px-8 py-20 flex flex-col justify-center min-h-screen">
+          <div className="text-center mb-16 animate-fadeIn">
+            <div className="inline-block mb-8">
+              <div className="w-20 h-20 rounded-full bg-gradient-to-br from-amber-100/80 to-rose-100/80 flex items-center justify-center shadow-sm border border-stone-200/30">
+                <div className="text-3xl">✨</div>
+              </div>
+            </div>
+            
+            <h1 className="text-6xl font-serif mb-3 text-stone-800 tracking-tight italic" style={{fontFamily: 'Georgia, serif'}}>
+              Ce Soir
+            </h1>
+            <p className="text-lg text-stone-500 font-light tracking-wide">
+              Tonight's energy
+            </p>
+          </div>
+
+          <div className="space-y-4 mb-16">
+            <div className="bg-white/60 backdrop-blur rounded-3xl p-6 border border-stone-200/40 shadow-sm">
+              <div className="flex gap-4">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/50 flex items-center justify-center flex-shrink-0 border border-amber-200/30">
+                  <svg className="w-5 h-5 text-amber-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-serif text-stone-800 mb-1 text-[15px]">Live city maps</h3>
+                  <p className="text-sm text-stone-500 font-light leading-relaxed">Discover where energy flows tonight</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur rounded-3xl p-6 border border-stone-200/40 shadow-sm">
+              <div className="flex gap-4">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/50 flex items-center justify-center flex-shrink-0 border border-rose-200/30">
+                  <svg className="w-5 h-5 text-rose-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-serif text-stone-800 mb-1 text-[15px]">Fully anonymous</h3>
+                  <p className="text-sm text-stone-500 font-light leading-relaxed">No profiles, just the vibe</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="bg-white/60 backdrop-blur rounded-3xl p-6 border border-stone-200/40 shadow-sm">
+              <div className="flex gap-4">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-br from-sky-50 to-sky-100/50 flex items-center justify-center flex-shrink-0 border border-sky-200/30">
+                  <svg className="w-5 h-5 text-sky-700" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13 10V3L4 14h7v7l9-11h-7z" />
+                  </svg>
+                </div>
+                <div>
+                  <h3 className="font-serif text-stone-800 mb-1 text-[15px]">Real-time updates</h3>
+                  <p className="text-sm text-stone-500 font-light leading-relaxed">Specials, music, crowds as they happen</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <button
+            onClick={() => setStep('phone')}
+            className="w-full py-4 bg-stone-800 hover:bg-stone-900 rounded-full font-serif text-white shadow-sm hover:shadow transition-all flex items-center justify-center gap-2"
+          >
+            <span>Begin</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+
+          <p className="text-xs text-stone-400 text-center mt-6 font-light leading-relaxed">
+            By continuing, you agree to our Terms and Privacy Policy
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // PHONE NUMBER ENTRY
+  if (step === 'phone') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-stone-50 to-amber-50/20">
+        <div className="max-w-md mx-auto px-8 py-20 flex flex-col justify-center min-h-screen">
+          <div className="mb-12 animate-fadeIn">
+            <button
+              onClick={() => setStep('welcome')}
+              className="text-stone-400 hover:text-stone-600 mb-8 text-sm font-light"
+            >
+              ← Back
+            </button>
+            
+            <h2 className="text-4xl font-serif text-stone-800 mb-3 tracking-tight">
+              Your phone
+            </h2>
+            <p className="text-stone-500 font-light leading-relaxed">
+              We'll send a verification code
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-serif text-stone-600 mb-3">
+                Phone number
+              </label>
+              <div className="relative">
+                <Phone className="absolute left-5 top-1/2 -translate-y-1/2 w-5 h-5 text-stone-400" />
+                <input
+                  type="tel"
+                  placeholder="+1 (555) 000-0000"
+                  value={phoneNumber}
+                  onChange={(e) => setPhoneNumber(e.target.value)}
+                  className="w-full pl-14 pr-5 py-4 bg-white/80 border border-stone-200/60 rounded-full focus:outline-none focus:border-stone-400 focus:bg-white transition-colors font-light text-stone-800 placeholder:text-stone-300"
+                />
+              </div>
+            </div>
+
+            <button
+              onClick={() => setStep('verify')}
+              disabled={!phoneNumber}
+              className="w-full py-4 bg-stone-800 hover:bg-stone-900 disabled:bg-stone-200 disabled:text-stone-400 rounded-full font-serif text-white shadow-sm hover:shadow transition-all disabled:cursor-not-allowed"
+            >
+              Continue
+            </button>
+          </div>
+
+          <p className="text-xs text-stone-400 text-center mt-8 font-light leading-relaxed">
+            Your number is private and never shared
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // VERIFICATION CODE
+  if (step === 'verify') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-stone-50 to-amber-50/20">
+        <div className="max-w-md mx-auto px-8 py-20 flex flex-col justify-center min-h-screen">
+          <div className="mb-12 animate-fadeIn">
+            <button
+              onClick={() => setStep('phone')}
+              className="text-stone-400 hover:text-stone-600 mb-8 text-sm font-light"
+            >
+              ← Back
+            </button>
+            
+            <h2 className="text-4xl font-serif text-stone-800 mb-3 tracking-tight">
+              Enter code
+            </h2>
+            <p className="text-stone-500 font-light leading-relaxed">
+              Sent to {phoneNumber}
+            </p>
+          </div>
+
+          <div className="space-y-8">
+            <div className="flex gap-3 justify-center">
+              {verificationCode.map((digit, index) => (
+                <input
+                  key={index}
+                  id={`code-${index}`}
+                  type="text"
+                  maxLength={1}
+                  value={digit}
+                  onChange={(e) => handleCodeInput(index, e.target.value)}
+                  className="w-14 h-14 text-center text-2xl font-serif bg-white/80 border border-stone-200/60 rounded-2xl focus:outline-none focus:border-stone-400 focus:bg-white transition-colors text-stone-800"
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={() => setStep('profile')}
+              disabled={verificationCode.some(d => !d)}
+              className="w-full py-4 bg-stone-800 hover:bg-stone-900 disabled:bg-stone-200 disabled:text-stone-400 rounded-full font-serif text-white shadow-sm hover:shadow transition-all disabled:cursor-not-allowed"
+            >
+              Verify
+            </button>
+
+            <button className="w-full text-sm text-stone-500 hover:text-stone-700 font-light">
+              Resend code
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // PROFILE SETUP
+  if (step === 'profile') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-stone-50 to-amber-50/20">
+        <div className="max-w-md mx-auto px-8 py-20 flex flex-col justify-center min-h-screen">
+          <div className="mb-12 animate-fadeIn">
+            <h2 className="text-4xl font-serif text-stone-800 mb-3 tracking-tight">
+              A few details
+            </h2>
+            <p className="text-stone-500 font-light leading-relaxed">
+              Helps us personalize your experience
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div>
+              <label className="block text-sm font-serif text-stone-600 mb-3">
+                Your age
+              </label>
+              <input
+                type="number"
+                placeholder="21"
+                value={age}
+                onChange={(e) => setAge(e.target.value)}
+                className="w-full px-5 py-4 bg-white/80 border border-stone-200/60 rounded-full focus:outline-none focus:border-stone-400 focus:bg-white transition-colors font-light text-stone-800 placeholder:text-stone-300"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-serif text-stone-600 mb-3">
+                Gender <span className="text-stone-400 font-light text-xs">(optional)</span>
+              </label>
+              <div className="grid grid-cols-3 gap-3">
+                {['Male', 'Female', 'Other'].map((option) => (
+                  <button
+                    key={option}
+                    onClick={() => setGender(option)}
+                    className={`py-3 rounded-full font-light text-sm transition-all ${
+                      gender === option
+                        ? 'bg-stone-800 text-white'
+                        : 'bg-white/80 border border-stone-200/60 text-stone-600 hover:border-stone-300 hover:bg-white'
+                    }`}
+                  >
+                    {option}
+                  </button>
+                ))}
+              </div>
+              <button
+                onClick={() => setGender('skip')}
+                className="w-full mt-3 text-sm text-stone-500 hover:text-stone-700 font-light"
+              >
+                Prefer not to say
+              </button>
+            </div>
+
+            <button
+              onClick={() => setStep('location')}
+              disabled={!age}
+              className="w-full py-4 bg-stone-800 hover:bg-stone-900 disabled:bg-stone-200 disabled:text-stone-400 rounded-full font-serif text-white shadow-sm hover:shadow transition-all disabled:cursor-not-allowed mt-8"
+            >
+              Continue
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // LOCATION PERMISSION
+  if (step === 'location') {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-neutral-50 via-stone-50 to-amber-50/20">
+        <div className="max-w-md mx-auto px-8 py-20 flex flex-col justify-center min-h-screen">
+          <div className="text-center mb-12 animate-fadeIn">
+            <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-amber-50 to-rose-50 rounded-full flex items-center justify-center border border-stone-200/40 shadow-sm">
+              <MapPin className="w-10 h-10 text-stone-600" strokeWidth={1.5} />
+            </div>
+            
+            <h2 className="text-4xl font-serif text-stone-800 mb-3 tracking-tight">
+              Enable location
+            </h2>
+            <p className="text-stone-500 font-light leading-relaxed max-w-sm mx-auto">
+              To show you nearby venues and live energy
+            </p>
+          </div>
+
+          <div className="space-y-4">
+            <button
+              onClick={() => alert('Location enabled! Welcome to Ce Soir')}
+              className="w-full py-4 bg-stone-800 hover:bg-stone-900 rounded-full font-serif text-white shadow-sm hover:shadow transition-all"
+            >
+              Enable location
+            </button>
+
+            <button
+              onClick={() => alert('Continuing without location')}
+              className="w-full py-4 bg-white/80 border border-stone-200/60 hover:border-stone-300 hover:bg-white rounded-full font-serif text-stone-700 transition-all"
+            >
+              Skip for now
+            </button>
+          </div>
+
+          <div className="mt-8 p-5 bg-white/40 backdrop-blur rounded-3xl border border-stone-200/40">
+            <p className="text-xs text-stone-500 leading-relaxed font-light text-center">
+              We use your location only to show nearby venues. Your identity and location are never shared.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return null;
+}
+
+export default UserAuthFlow;
